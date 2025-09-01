@@ -24,6 +24,12 @@
 		61791E162B42297B00302B57 /* MetalKitSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61791E142B42294700302B57 /* MetalKitSceneView.swift */; };
 		617E50C92B314C4800F99766 /* PLYIO in Frameworks */ = {isa = PBXBuildFile; productRef = 617E50C82B314C4800F99766 /* PLYIO */; };
 		617E50CB2B314C4800F99766 /* SplatIO in Frameworks */ = {isa = PBXBuildFile; productRef = 617E50CA2B314C4800F99766 /* SplatIO */; };
+		D31288A52E60540F0086E177 /* MetalSplatter in Frameworks */ = {isa = PBXBuildFile; productRef = D31288A42E60540F0086E177 /* MetalSplatter */; };
+		D31288A72E60540F0086E177 /* PLYIO in Frameworks */ = {isa = PBXBuildFile; productRef = D31288A62E60540F0086E177 /* PLYIO */; };
+		D31288A92E60540F0086E177 /* SampleBoxRenderer in Frameworks */ = {isa = PBXBuildFile; productRef = D31288A82E60540F0086E177 /* SampleBoxRenderer */; };
+		D31288AB2E60540F0086E177 /* SplatIO in Frameworks */ = {isa = PBXBuildFile; productRef = D31288AA2E60540F0086E177 /* SplatIO */; };
+		D31288AD2E60540F0086E177 /* SplatConverter in Frameworks */ = {isa = PBXBuildFile; productRef = D31288AC2E60540F0086E177 /* SplatConverter */; };
+		D382C1572E6097D60092D408 /* SirkoHead360.usdz in Resources */ = {isa = PBXBuildFile; fileRef = D382C1562E6097D60092D408 /* SirkoHead360.usdz */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +48,8 @@
 		61791E112B416DCF00302B57 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		61791E142B42294700302B57 /* MetalKitSceneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalKitSceneView.swift; sourceTree = "<group>"; };
 		617E50B02B314BE200F99766 /* MetalSplatter SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MetalSplatter SampleApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D382C1562E6097D60092D408 /* SirkoHead360.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = SirkoHead360.usdz; sourceTree = "<group>"; };
+		D382C15A2E609CFD0092D408 /* USDZRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USDZRenderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,10 +57,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D31288AD2E60540F0086E177 /* SplatConverter in Frameworks */,
+				D31288A72E60540F0086E177 /* PLYIO in Frameworks */,
 				617E50CB2B314C4800F99766 /* SplatIO in Frameworks */,
 				617E50C92B314C4800F99766 /* PLYIO in Frameworks */,
+				D31288AB2E60540F0086E177 /* SplatIO in Frameworks */,
 				61791E002B415D3F00302B57 /* MetalSplatter in Frameworks */,
+				D31288A92E60540F0086E177 /* SampleBoxRenderer in Frameworks */,
 				61791E022B415D3F00302B57 /* SampleBoxRenderer in Frameworks */,
+				D31288A52E60540F0086E177 /* MetalSplatter in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +75,7 @@
 		610347DF2B4689DB00693CE3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D382C15A2E609CFD0092D408 /* USDZRenderer.swift */,
 				61791DDB2B4154FB00302B57 /* ModelIdentifier.swift */,
 				61791DDE2B4154FB00302B57 /* ModelRenderer.swift */,
 				61791DDC2B4154FB00302B57 /* SampleBoxRenderer+ModelRenderer.swift */,
@@ -109,6 +123,7 @@
 		61E3FD792AE5CB0200032652 = {
 			isa = PBXGroup;
 			children = (
+				D31288AE2E605B930086E177 /* HandTracking */,
 				610347E22B468A1100693CE3 /* App */,
 				610347E12B468A0B00693CE3 /* Util */,
 				610347E02B468A0000693CE3 /* Scene */,
@@ -126,6 +141,14 @@
 				617E50B02B314BE200F99766 /* MetalSplatter SampleApp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D31288AE2E605B930086E177 /* HandTracking */ = {
+			isa = PBXGroup;
+			children = (
+				D382C1562E6097D60092D408 /* SirkoHead360.usdz */,
+			);
+			path = HandTracking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -149,6 +172,11 @@
 				617E50CA2B314C4800F99766 /* SplatIO */,
 				61791DFF2B415D3F00302B57 /* MetalSplatter */,
 				61791E012B415D3F00302B57 /* SampleBoxRenderer */,
+				D31288A42E60540F0086E177 /* MetalSplatter */,
+				D31288A62E60540F0086E177 /* PLYIO */,
+				D31288A82E60540F0086E177 /* SampleBoxRenderer */,
+				D31288AA2E60540F0086E177 /* SplatIO */,
+				D31288AC2E60540F0086E177 /* SplatConverter */,
 			);
 			productName = "MetalSplatter SampleApp";
 			productReference = 617E50B02B314BE200F99766 /* MetalSplatter SampleApp.app */;
@@ -195,6 +223,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D382C1572E6097D60092D408 /* SirkoHead360.usdz in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,9 +259,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = L6MB97A363;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = test1;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -246,6 +276,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = metal.splatter.test.sahkdbsakb;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
@@ -265,9 +296,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = L6MB97A363;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = test1;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -281,6 +313,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = metal.splatter.test.sahkdbsakb;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
@@ -457,6 +490,26 @@
 		617E50CA2B314C4800F99766 /* SplatIO */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SplatIO;
+		};
+		D31288A42E60540F0086E177 /* MetalSplatter */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MetalSplatter;
+		};
+		D31288A62E60540F0086E177 /* PLYIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PLYIO;
+		};
+		D31288A82E60540F0086E177 /* SampleBoxRenderer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SampleBoxRenderer;
+		};
+		D31288AA2E60540F0086E177 /* SplatIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SplatIO;
+		};
+		D31288AC2E60540F0086E177 /* SplatConverter */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SplatConverter;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

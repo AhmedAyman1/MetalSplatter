@@ -8,6 +8,7 @@ import SampleBoxRenderer
 import simd
 import Spatial
 import SwiftUI
+import ARKit
 
 extension LayerRenderer.Clock.Instant.Duration {
     var timeInterval: TimeInterval {
@@ -24,6 +25,8 @@ class VisionSceneRenderer {
     let layerRenderer: LayerRenderer
     let device: MTLDevice
     let commandQueue: MTLCommandQueue
+    var modelTranslation: SIMD3<Float> = SIMD3<Float>(0, 0, Constants.modelCenterZ)
+
 
     var model: ModelIdentifier?
     var modelRenderer: (any ModelRenderer)?
@@ -35,6 +38,57 @@ class VisionSceneRenderer {
 
     let arSession: ARKitSession
     let worldTracking: WorldTrackingProvider
+    let handTracking: HandTrackingProvider
+
+    var latestLeftHandAnchor: HandAnchor?
+    var latestRightHandAnchor: HandAnchor?
+    
+    // MARK: - Pinch-driven grab + drag
+
+    private var isGrabbing = false
+    private var grabOffset: SIMD3<Float> = .zero
+
+    /// Update the model translation based on pinch state for the given hand
+    func updateGrabState(with anchor: HandAnchor) {
+        guard let thumbTip = anchor.handSkeleton?.joint(.thumbTip).parentFromJointTransform,
+              let indexTip = anchor.handSkeleton?.joint(.indexFingerTip).parentFromJointTransform else {
+            return
+        }
+
+        // Positions in hand-local space
+        let thumbPos = SIMD3<Float>(thumbTip.columns.3.x,
+                                    thumbTip.columns.3.y,
+                                    thumbTip.columns.3.z)
+        let indexPos = SIMD3<Float>(indexTip.columns.3.x,
+                                    indexTip.columns.3.y,
+                                    indexTip.columns.3.z)
+        let pinchCenterLocal = (thumbPos + indexPos) / 2.0
+
+        // Convert into world space (so model doesn’t "stick" to hand anchor space)
+        let anchorTransform = anchor.originFromAnchorTransform
+        let pinchCenterWorld4 = anchorTransform * SIMD4<Float>(pinchCenterLocal, 1)
+        let pinchCenterWorld = SIMD3<Float>(pinchCenterWorld4.x,
+                                            pinchCenterWorld4.y,
+                                            pinchCenterWorld4.z)
+
+        // Detect pinch
+        let distance = simd_length(thumbPos - indexPos)
+        let pinching = distance < 0.02 // ~2cm
+
+        if pinching && !isGrabbing {
+            // Just started pinching → "grab" the model
+            isGrabbing = true
+            grabOffset = modelTranslation - pinchCenterWorld
+        } else if pinching && isGrabbing {
+            // Continue dragging → update model position
+            let target = pinchCenterWorld + grabOffset
+            modelTranslation = simd_mix(modelTranslation, target, SIMD3<Float>(repeating: 0.2))
+        } else if !pinching && isGrabbing {
+            // Pinch released → drop the model
+            isGrabbing = false
+        }
+    }
+
 
     init(_ layerRenderer: LayerRenderer) {
         self.layerRenderer = layerRenderer
@@ -42,7 +96,24 @@ class VisionSceneRenderer {
         self.commandQueue = self.device.makeCommandQueue()!
 
         worldTracking = WorldTrackingProvider()
+        handTracking = HandTrackingProvider()
         arSession = ARKitSession()
+    }
+    
+    func isPinching(_ anchor: HandAnchor) -> Bool {
+        guard let thumbTip = anchor.handSkeleton?.joint(.thumbTip).parentFromJointTransform,
+              let indexTip = anchor.handSkeleton?.joint(.indexFingerTip).parentFromJointTransform else {
+            return false
+        }
+        let thumbPos = SIMD3<Float>(thumbTip.columns.3.x,
+                                    thumbTip.columns.3.y,
+                                    thumbTip.columns.3.z)
+        let indexPos = SIMD3<Float>(indexTip.columns.3.x,
+                                    indexTip.columns.3.y,
+                                    indexTip.columns.3.z)
+
+        let distance = simd_length(thumbPos - indexPos)
+        return distance < 0.02  // ~2 cm threshold
     }
 
     func load(_ model: ModelIdentifier?) async throws {
@@ -75,7 +146,7 @@ class VisionSceneRenderer {
     func startRenderLoop() {
         Task {
             do {
-                try await arSession.run([worldTracking])
+                try await arSession.run([worldTracking, handTracking])
             } catch {
                 fatalError("Failed to initialize ARSession")
             }
@@ -88,12 +159,14 @@ class VisionSceneRenderer {
         }
     }
 
+
+    
     private func viewports(drawable: LayerRenderer.Drawable, deviceAnchor: DeviceAnchor?) -> [ModelRendererViewportDescriptor] {
         let rotationMatrix = matrix4x4_rotation(radians: Float(rotation.radians),
                                                 axis: Constants.rotationAxis)
-        let translationMatrix = matrix4x4_translation(0.0, 0.0, Constants.modelCenterZ)
-        // Turn common 3D GS PLY files rightside-up. This isn't generally meaningful, it just
-        // happens to be a useful default for the most common datasets at the moment.
+        let translationMatrix = matrix4x4_translation(modelTranslation.x,
+                                                      modelTranslation.y,
+                                                      modelTranslation.z)
         let commonUpCalibration = matrix4x4_rotation(radians: .pi, axis: SIMD3<Float>(0, 0, 1))
 
         let simdDeviceAnchor = deviceAnchor?.originFromAnchorTransform ?? matrix_identity_float4x4
@@ -179,6 +252,31 @@ class VisionSceneRenderer {
     }
 
     func renderLoop() {
+        Task {
+            do {
+                for await update in handTracking.anchorUpdates {
+                    switch update.event {
+                    case .added, .updated:
+                        if update.anchor.chirality == .right {
+                            latestRightHandAnchor = update.anchor
+                            updateGrabState(with: update.anchor)
+                        } else {
+                            latestLeftHandAnchor = update.anchor
+                        }
+                    case .removed:
+                        if update.anchor.chirality == .right {
+                            latestRightHandAnchor = nil
+                        } else {
+                            latestLeftHandAnchor = nil
+                        }
+                    }
+                }
+
+            } catch {
+                Self.log.error("Failed to receive hand anchor updates: \(error.localizedDescription)")
+            }
+        }
+
         while true {
             if layerRenderer.state == .invalidated {
                 Self.log.warning("Layer is invalidated")
@@ -197,3 +295,10 @@ class VisionSceneRenderer {
 
 #endif // os(visionOS)
 
+
+
+
+
+   
+
+   
