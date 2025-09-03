@@ -49,7 +49,6 @@
 		61791E142B42294700302B57 /* MetalKitSceneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalKitSceneView.swift; sourceTree = "<group>"; };
 		617E50B02B314BE200F99766 /* MetalSplatter SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MetalSplatter SampleApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D382C1562E6097D60092D408 /* SirkoHead360.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = SirkoHead360.usdz; sourceTree = "<group>"; };
-		D382C15A2E609CFD0092D408 /* USDZRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USDZRenderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +74,6 @@
 		610347DF2B4689DB00693CE3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				D382C15A2E609CFD0092D408 /* USDZRenderer.swift */,
 				61791DDB2B4154FB00302B57 /* ModelIdentifier.swift */,
 				61791DDE2B4154FB00302B57 /* ModelRenderer.swift */,
 				61791DDC2B4154FB00302B57 /* SampleBoxRenderer+ModelRenderer.swift */,
