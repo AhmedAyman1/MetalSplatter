@@ -272,6 +272,10 @@ class VisionSceneRenderer {
                     }
                 }
 
+                
+                
+                
+                
             } catch {
                 Self.log.error("Failed to receive hand anchor updates: \(error.localizedDescription)")
             }
